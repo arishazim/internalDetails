@@ -1,0 +1,37 @@
+import com.sun.management.OperatingSystemMXBean;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.text.NumberFormat;
+
+public class Main {
+
+    public static void main(String[] args) {
+	// write your code here
+
+        Runtime runtime = Runtime.getRuntime();
+        NumberFormat format = NumberFormat.getInstance();
+        OperatingSystemMXBean operatingSystemMXBean = (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();
+        RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
+        int availableProcessors = operatingSystemMXBean.getAvailableProcessors();
+        long prevUpTime = runtimeMXBean.getUptime();
+        long prevProcessCpuTime = operatingSystemMXBean.getProcessCpuTime();
+        double cpuUsage;
+        long upTime = runtimeMXBean.getUptime();
+        long processCpuTime = operatingSystemMXBean.getProcessCpuTime();
+        long elapsedCpu = processCpuTime - prevProcessCpuTime;
+        long elapsedTime = upTime - prevUpTime;
+        long maxMemory = runtime.maxMemory();
+        long allocatedMemory = runtime.totalMemory();
+        long freeMemory = runtime.freeMemory();
+
+        cpuUsage = Math.min(99F, elapsedCpu / (elapsedTime * 10000F * availableProcessors));
+        System.out.println("Java CPU usage: " + cpuUsage);
+        System.out.println("UpTime "+ upTime);
+        System.out.println("processCpuTime "+ processCpuTime);
+        System.out.println("availableProcessors "+ availableProcessors);
+        System.out.println("free memory: " + format.format(freeMemory / 1024) + " ");
+        System.out.println("allocated memory: " +(allocatedMemory / 1024) + " ");
+        System.out.println("max memory: " + (maxMemory / 1024) + " ");
+        System.out.println("total free memory: " + ((freeMemory + (maxMemory - allocatedMemory)) / 1024) + " ");
+    }
+}
